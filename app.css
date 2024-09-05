@@ -1,0 +1,113 @@
+/* Remove if you are not using Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+  --max-p-width: 65ch;
+}
+* {
+  box-sizing: border-box;
+}
+
+
+body { 
+  min-height: 100dvh; 
+  scrollbar-width: thin;
+  scroll-behavior: smooth; 
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5; 
+
+}
+input, button, textarea, select { font: inherit; }
+
+p { 
+  text-wrap: pretty;
+  hanging-punctuation: first last;
+  /* And as a good practice, setting up a max width for text */
+  max-width: var(--max-p-width);
+
+}
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+/* Only works in chromium based browsers for now, but it ensures that no words are left alone on a new line */
+
+img, video, svg { height: auto; max-width: 100%; }
+
+img, picture, svg, video, canvas{
+  font-style: italic; 
+  vertical-align: middle;
+}
+
+@media (prefers-reduced-motion: reduce)  {
+ *, *::before, *::after { 
+  animation-duration: 0.01ms !important; 
+  animation-iteration-count: 1 !important; 
+  transition-duration: 0.01ms !important; 
+  scroll-behavior: auto !important;
+  transition: none;
+ }
+}
+
+main, section, header, footer, article, nav {
+  container-type: inline-size; /* This will allow use to use @container with these elements */
+}
+
+/* And this one are personal preferences, feel free to remove them */
+
+.content-grid {
+  --padding-inline: 1rem;
+  --content-max-width: 900px;
+  --breakout-max-width: 1200px;
+
+  --breakout-size: calc(
+    (var(--breakout-max-width) - var(--content-max-width)) / 2
+  );
+
+  display: grid;
+  grid-template-columns:
+    [full-width-start] minmax(var(--padding-inline), 1fr)
+    [breakout-start] minmax(0, var(--breakout-size))
+    [content-start] min(
+      100% - (var(--padding-inline) * 2),
+      var(--content-max-width)
+    )
+    [content-end]
+    minmax(0, var(--breakout-size)) [breakout-end]
+    minmax(var(--padding-inline), 1fr) [full-width-end];
+}
+
+.content-grid > :not(.breakout, .full-width),
+.full-width > :not(.breakout, .full-width) {
+  grid-column: content;
+}
+
+.content-grid > .breakout {
+  grid-column: breakout;
+}
+
+.content-grid > .full-width {
+  grid-column: full-width;
+
+  display: grid;
+  grid-template-columns: inherit;
+}
+
+/**
+  Credit to: https://www.youtube.com/@KevinPowell 
+  Video: https://www.youtube.com/watch?v=c13gpBrnGEw&t
+  Codepen: https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbHZlMk0tdzNYZmM4amtBRkNuTGltaTV5Qmdfd3xBQ3Jtc0trTmw1dGllMjd0amRZM2drYnR0aDNocURsTVg1NTJSd0ZVbTZxS1JEeUhqRUZUaHhOY0E1NWtYUmVOX0VDaE9Vb0N5WlloMmxmVktGaDEyYVdrc0JhRjJPTVp3alhxNDhzR2tuQmg2NlFrQTBHT2NVQQ&q=https%3A%2F%2Fcodepen.io%2Fkevinpowell%2Fpen%2FExrZrrw&v=c13gpBrnGEw
+  Guide for .content-grid 
+  -----------------------
+  Define .content-grid on the parent element of your content.
+  This will create a grid layout with a max-width of --content-max-width.
+  By default, anything inside the grid will have a max-width of --content-max-width.
+  If we use the class .breakout on an element, it will be a bit bigger, since it will include the --breakout-size.
+  If we use the class .full-width on an element, it will take the full width of the viewport.
+
+  If you need to change the breakout size or padding
+  Just change the variables in the parent element where you want to apply this layout, and it will be applied to all children.
+**/
